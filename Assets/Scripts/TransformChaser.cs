@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 
-public class TransformChaser : MonoWithCachedTransform
+public class TransformChaser : Projectile
 {
 	private Transform _target;
 
-	public void Setup(Transform target)
+	public override void Setup(Transform target)
 	{
 		_target = target;
 	}
@@ -22,13 +22,13 @@ public class TransformChaser : MonoWithCachedTransform
 			var toTarget = (_target.position - CachedTransform.position).normalized;
 			var angleDifference = Vector3.Angle(CachedTransform.forward, toTarget);
 
-			if (angleDifference > 1f)
+			if (angleDifference > 0.25f)
 			{
 				RotateTowards(toTarget, angleDifference);
 			}
-
-			CachedTransform.position += CachedTransform.forward * speedPerSecond * Time.deltaTime;
 		}
+
+		CachedTransform.position += CachedTransform.forward * speedPerSecond * Time.deltaTime;
 	}
 
 	private void RotateTowards(Vector3 toTarget, float angleDifference)

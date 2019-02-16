@@ -63,7 +63,7 @@ public class GameController : MonoBehaviour
 	{
 		if (_instance == null)
 		{
-			_instance = this;
+			InitInstance();
 		}
 		else
 		{
@@ -73,6 +73,7 @@ public class GameController : MonoBehaviour
 			}
 		}
 	}
+
 	private void OnDestroy()
 	{
 		if (_instance == this)
@@ -81,6 +82,12 @@ public class GameController : MonoBehaviour
 		}
 	}
 	#endregion
+
+	private void InitInstance()
+	{
+		_instance = this;
+		_managers.Add(typeof(ICollisionManager), new CollisionManager());
+	}
 }
 
 //TODO

@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class LockOnManager : MonoBehaviour, ILockOnManager
 {
-	public bool IsLockedOn { get; private set; }
-
-
+	private HUDMarker _lockedOnHudMarker;
+	public bool IsLockedOn { get { return _lockedOnHudMarker != null; } } 
+	public Transform LockedOnTransform { get { return _lockedOnHudMarker != null ? _lockedOnHudMarker.Target : null; } }
 
 	[Range(0.1f, 1f)]
 	public float lockOnToleranceH;
@@ -34,6 +34,14 @@ public class LockOnManager : MonoBehaviour, ILockOnManager
 		if (IsLockedOn && Input.GetKeyDown(KeyCode.LeftShift))
 		{
 			_dropLockOn = true;
+		}
+	}
+
+	public void RemoveMarker(HUDMarker marker)
+	{
+		if (_lockedOnHudMarker == marker)
+		{
+			_lockedOnHudMarker = null;
 		}
 	}
 
@@ -73,11 +81,14 @@ public class LockOnManager : MonoBehaviour, ILockOnManager
 				if (_dropLockOn)
 				{
 					_markerClosestToScreenCentre.DisengageLockOn();
-					IsLockedOn = false;
+					_lockedOnHudMarker = null;
 				}
 				else
 				{
-					IsLockedOn = _markerClosestToScreenCentre.EngageLockOnAndCheckIfLockedOn(_isTargetInLockArea);
+					if (_markerClosestToScreenCentre.EngageLockOnAndCheckIfLockedOn(_isTargetInLockArea))
+					{
+						_lockedOnHudMarker = _markerClosestToScreenCentre;
+					}
 				}
 			}
 

@@ -9,6 +9,14 @@ public class HUDMarker : MonoWithCachedTransform
 	public Image marker;
 	public Text label;
 
+	public Transform Target
+	{
+		get
+		{
+			return IsLockedOn ? _target : null;
+		}
+	}
+
 	public bool IsLockedOn { get; private set; }
 
 	private Transform _target;
@@ -86,6 +94,11 @@ public class HUDMarker : MonoWithCachedTransform
 		{
 			UpdateLockStatus();
 		}
+	}
+
+	private void OnDestroy()
+	{
+		_lockOnManager.RemoveMarker(this);
 	}
 
 	private void UpdateLockStatus()
