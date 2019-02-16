@@ -1,0 +1,94 @@
+﻿using System.Collections.Generic;
+using UnityEngine;
+
+public class GameController : MonoBehaviour 
+{
+	private static GameController _instance;
+
+	public static void Cleanup()
+	{
+		_instance._managers.Clear();
+		_instance = null;
+	}
+
+	public static Transform TryGetPlayerTransform()
+	{
+		return _instance != null ? _instance.PlayerTransform : null;
+	}
+
+	public static void RegisterPlayerTransform(Transform transform)
+	{
+		if (_instance != null)
+		{
+			_instance.PlayerTransform = transform;
+		}
+	}
+
+	public static void UnregisterPlayerTransform(Transform transform)
+	{
+		if (_instance != null && _instance.PlayerTransform == transform)
+		{
+			_instance.PlayerTransform = null;
+		}
+	}
+
+	public static bool TryRegister<T>(T manager) where T : IManager
+	{
+		if (_instance == null || _instance._managers.ContainsKey(typeof(T)))
+		{
+			return false;
+		}
+
+		_instance._managers.Add(typeof(T), manager);
+		return true;
+	}
+
+	public static T TryGetManager<T>() where T : class, IManager
+	{
+		IManager manager;
+
+		if (_instance != null && _instance._managers.TryGetValue(typeof(T), out manager))
+		{
+			return (T)manager;
+		}
+
+		return null;
+	}
+
+	private Transform PlayerTransform { get; set; }
+	private Dictionary<System.Type, IManager> _managers = new Dictionary<System.Type, IManager>();
+
+	#region Unity lifecycle of a monosingleton
+	private void Awake()
+	{
+		if (_instance == null)
+		{
+			_instance = this;
+		}
+		else
+		{
+			if (_instance != this)
+			{
+				Destroy(gameObject);
+			}
+		}
+	}
+	private void OnDestroy()
+	{
+		if (_instance == this)
+		{
+			Cleanup();
+		}
+	}
+	#endregion
+}
+
+//TODO
+//Sep. file
+public interface IManager { }
+public interface IHUDManager : IManager 
+{ 
+	ILockOnManager LockOnManager { get; }
+	void SpawnMarker(UnityEngine.Transform target, Color color, string label, bool isLockable);
+	void RemoveMarker(HUDMarker marker);
+}
