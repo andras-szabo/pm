@@ -108,6 +108,6 @@ public class PlayerManager : MonoWithCachedTransform, IPlayerManager
 	{
 		_hoverThruster.SetInput(vert: Input.GetAxis("Vertical"),
 								hori: Input.GetAxis("Horizontal"),
-								 jmp: Input.GetKeyDown(KeyCode.Space));
+								 jmp: Input.GetKey(KeyCode.Space));
 	}
 }

@@ -487,8 +487,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -114.7, y: -108}
-  m_SizeDelta: {x: 229.4, y: 115.3}
+  m_AnchoredPosition: {x: -133.49, y: -84.61}
+  m_SizeDelta: {x: 191.83, y: 103.63}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &178986510
 MonoBehaviour:
@@ -2378,7 +2378,7 @@ MonoBehaviour:
   hoverHeight: 2.5
   speed: 8
   turnSensitivity: 2
-  jumpStrength: 650
+  jumpStrength: 20
   correctiveForce: 32
   strafe: 1
   zTolerance: 2
