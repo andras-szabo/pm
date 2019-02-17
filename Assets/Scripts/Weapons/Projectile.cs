@@ -5,6 +5,16 @@ public class Projectile : MonoWithCachedTransform, IProjectile
 	[Range(1f, 100f)]
 	public float speedPerSecond;
 
+	public TrailRenderer trailRenderer;
+
+	protected virtual void OnEnable()
+	{
+		if (trailRenderer != null)
+		{
+			trailRenderer.Clear();
+		}
+	}
+
 	public virtual void Setup(Transform transform)
 	{
 	}

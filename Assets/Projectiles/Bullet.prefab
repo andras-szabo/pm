@@ -242,6 +242,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speedPerSecond: 80
+  trailRenderer: {fileID: 96192819886092474}
 --- !u!135 &135258345592850660
 SphereCollider:
   m_ObjectHideFlags: 1
