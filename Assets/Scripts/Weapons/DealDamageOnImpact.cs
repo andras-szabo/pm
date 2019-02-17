@@ -1,9 +1,14 @@
 ﻿using UnityEngine;
 
-public class DealDamageOnImpact : MonoBehaviour
+public class DealDamageOnImpact : PoolUser
 {
 	public int damage;
 	private bool _hasDealtDamage;
+
+	private void OnEnable()
+	{
+		_hasDealtDamage = false;	
+	}
 
 	private void OnTriggerEnter(Collider collider)
 	{
@@ -20,6 +25,6 @@ public class DealDamageOnImpact : MonoBehaviour
 
 		_hasDealtDamage = true;
 
-		Destroy(gameObject);
+		Despawn();
 	}
 }

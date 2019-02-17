@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-//TODO - pooling
-public class TTL : MonoBehaviour 
+public class TTL : PoolUser
 {
 	public bool autoSetup;
 	public float timeToLiveSeconds;
@@ -34,7 +31,8 @@ public class TTL : MonoBehaviour
 			_elapsedTime += Time.deltaTime;
 			if (_elapsedTime >= _timeToLive)
 			{
-				UnityEngine.Object.Destroy(this.gameObject);
+				_elapsedTime = 0f;
+				Despawn();
 			}
 		}
 	}

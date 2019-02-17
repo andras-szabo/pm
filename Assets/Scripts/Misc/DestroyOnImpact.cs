@@ -1,12 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
-public class DestroyOnImpact : MonoBehaviour
+public class DestroyOnImpact : PoolUser
 {
 	private void OnCollisionEnter(Collision collision)
 	{
-		Destroy(this.gameObject);
+		Despawn();
 	}
 }

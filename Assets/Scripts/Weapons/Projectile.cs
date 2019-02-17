@@ -13,6 +13,11 @@ public class Projectile : MonoWithCachedTransform, IProjectile
 	{
 		CachedTransform.position += CachedTransform.forward * speedPerSecond * Time.deltaTime;
 	}
+
+	protected virtual void OnDestroy()
+	{
+		Debug.LogWarning("Getting destroyed");
+	}
 }
 
 public interface IProjectile
