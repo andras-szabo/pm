@@ -8,10 +8,16 @@ public class CameraManager : MonoBehaviour, ICameraManager
 	private Dictionary<CustomCameraType, CustomCameraContainer> _activeCustomCams = new Dictionary<CustomCameraType, CustomCameraContainer>();
 
 	private List<CustomCameraContainer> _workingCamList;
+	private IHUDManager _hud;
 
 	private void Awake()
 	{
 		GameController.TryRegister<ICameraManager>(this);	
+	}
+
+	private void Start()
+	{
+		_hud = GameController.TryGetManager<IHUDManager>();	
 	}
 
 	public Rect RegisterAndGetViewportPixelRect(CustomCameraContainer camContainer)
@@ -28,7 +34,7 @@ public class CameraManager : MonoBehaviour, ICameraManager
 
 		TrySetAsActiveCamera(camContainer);
 
-		return GameController.TryGetManager<IHUDManager>().GetPixelRectForCamViewport(type);
+		return _hud.GetPixelRectForCamViewport(type);
 	}
 
 	public void Unregister(CustomCameraContainer camContainer)
@@ -39,7 +45,7 @@ public class CameraManager : MonoBehaviour, ICameraManager
 
 		if (!TrySetNextActiveCamera(type))
 		{
-			//Tell the hud
+			_hud.ToggleCustomCameraScreen(type, false);
 		}
 	}
 
@@ -65,8 +71,8 @@ public class CameraManager : MonoBehaviour, ICameraManager
 		{
 			if (previousActiveCam != null) { previousActiveCam.Hide(); }
 		}
-		
-		// otherwise: tell HUD: this is a first
+
+		_hud.ToggleCustomCameraScreen(camContainer.type, true);
 
 		_activeCustomCams[camContainer.type] = camContainer;
 		camContainer.Show();

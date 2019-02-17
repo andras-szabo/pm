@@ -32,7 +32,6 @@ public class HUDManager : MonoWithCachedTransform, IHUDManager
 		newMarker.Setup(viewCamera, target, _screenHalfDimensions, color, label, isLockable, this);
 	}
 
-	//TODO pool
 	public void RemoveMarker(HUDMarker marker)
 	{
 		Destroy(marker.gameObject);
@@ -53,16 +52,29 @@ public class HUDManager : MonoWithCachedTransform, IHUDManager
 		_screenHalfDimensions = new Vector2(halfWidth, halfHeight);
 	}
 
-	public Rect GetPixelRectForCamViewport(CustomCameraType type)
+	public void ToggleCustomCameraScreen(CustomCameraType type, bool state)
+	{
+		var screen = GetScreenFor(type);
+		if (screen != null) { screen.Toggle(state); }
+	}
+
+	private HUDCustomCameraScreen GetScreenFor(CustomCameraType type)
 	{
 		foreach (var camScreen in customCameraScreens)
 		{
 			if (camScreen.type == type)
 			{
-				return CalculateCamRect(camScreen.GetWorldCorners());
+				return camScreen;
 			}
 		}
 
+		return null;
+	}
+
+	public Rect GetPixelRectForCamViewport(CustomCameraType type)
+	{
+		var camScreen = GetScreenFor(type);
+		if (camScreen != null) { return CalculateCamRect(camScreen.GetWorldCorners()); }
 		return new Rect(0, 0, 0, 0);
 	}
 
