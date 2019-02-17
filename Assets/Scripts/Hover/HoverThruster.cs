@@ -17,7 +17,7 @@ public class HoverThruster : MonoBehaviour
 		}
 	};
 
-	[Range(1f, 10f)] public float hoverHeight;
+	[Range(1f, 20f)] public float hoverHeight;
 	[Range(0f, 50f)] public float speed;
 	[Range(0f, 50f)] public float turnSensitivity;
 	[Range(10f, 1000f)] public float jumpStrength;

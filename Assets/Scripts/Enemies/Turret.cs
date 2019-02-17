@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(WeaponController))]
-public class Turret : MonoBehaviour 
+public class Turret : MonoWithCachedTransform
 {
 	float maxRange = 100f;
 
@@ -56,7 +56,7 @@ public class Turret : MonoBehaviour
 
 				_aimPosition += (1f - aimPrecision) * new Vector3(scatterX, scatterY);
 
-				CachedRigidbody.transform.LookAt(_aimPosition, Vector3.up);
+				CachedTransform.rotation = Quaternion.LookRotation(_aimPosition - CachedTransform.position, Vector3.up);
 				CachedWeaponController.Shoot(0, null);
 
 				_elapsedSinceLastShot = 0f;
@@ -92,7 +92,7 @@ public class Turret : MonoBehaviour
 
 	private bool TryCalculateAimPosition(out Vector3 aimPosition)
 	{
-		var p = CachedPlayer.position - CachedRigidbody.position;
+		var p = CachedPlayer.position - CachedTransform.position;
 		var v = CachedPlayer.velocity - CachedRigidbody.velocity;
 		var s = bulletSpeedUnitsPerSecond;
 
