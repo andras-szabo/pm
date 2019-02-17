@@ -69,15 +69,3 @@ public class GameController : MonoBehaviour
 		_managers.Add(typeof(ICollisionManager), new CollisionManager());
 	}
 }
-
-//TODO
-//Sep. file
-public interface IManager { }
-public interface IHUDManager : IManager 
-{ 
-	ILockOnManager LockOnManager { get; }
-	void SpawnMarker(UnityEngine.Transform target, Color color, string label, bool isLockable);
-	void RemoveMarker(HUDMarker marker);
-	Rect GetPixelRectForCamViewport(CustomCameraType type);
-	void ToggleCustomCameraScreen(CustomCameraType type, bool state);
-}

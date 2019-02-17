@@ -6,6 +6,7 @@ using UnityEngine;
 public class FlyingMeanie : MonoWithCachedTransform 
 {
 	public float desiredDistanceToPlayer = 5f;
+	public float giveUpChaseDistance = 100f;
 
 	private HoverThruster _hoverThruster;
 	private Transform _player;
@@ -38,8 +39,13 @@ public class FlyingMeanie : MonoWithCachedTransform
 		var myPos = CachedTransform.position;
 		var currentDistance = Mathf.Sqrt(Mathf.Pow(playerPos.x - myPos.x, 2f) + Mathf.Pow(playerPos.z - myPos.z, 2f));
 
+		if (currentDistance > giveUpChaseDistance)
+		{
+			return 0f;
+		}
+
 		return currentDistance > desiredDistanceToPlayer ? Mathf.Min(1f, (currentDistance - desiredDistanceToPlayer) / currentDistance)
-												 : Mathf.Max(-1f, -(desiredDistanceToPlayer - currentDistance) / currentDistance);
+														 : Mathf.Max(-1f, -(desiredDistanceToPlayer - currentDistance) / currentDistance);
 	}
 
 	private float CalculateHorizontalInput()

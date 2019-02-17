@@ -7,7 +7,6 @@ using UnityEngine.UI;
 [RequireComponent(typeof(CanvasScaler))]
 public class HUDManager : MonoWithCachedTransform, IHUDManager
 {
-	// TODO Pool
 	public HUDMarker markerPrefab;
 	public Camera viewCamera;
 
