@@ -11,27 +11,6 @@ public class GameController : MonoBehaviour
 		_instance = null;
 	}
 
-	public static Transform TryGetPlayerTransform()
-	{
-		return _instance != null ? _instance.PlayerTransform : null;
-	}
-
-	public static void RegisterPlayerTransform(Transform transform)
-	{
-		if (_instance != null)
-		{
-			_instance.PlayerTransform = transform;
-		}
-	}
-
-	public static void UnregisterPlayerTransform(Transform transform)
-	{
-		if (_instance != null && _instance.PlayerTransform == transform)
-		{
-			_instance.PlayerTransform = null;
-		}
-	}
-
 	public static bool TryRegister<T>(T manager) where T : IManager
 	{
 		if (_instance == null || _instance._managers.ContainsKey(typeof(T)))
@@ -55,7 +34,6 @@ public class GameController : MonoBehaviour
 		return null;
 	}
 
-	private Transform PlayerTransform { get; set; }
 	private Dictionary<System.Type, IManager> _managers = new Dictionary<System.Type, IManager>();
 
 	#region Unity lifecycle of a monosingleton

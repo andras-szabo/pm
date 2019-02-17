@@ -93,6 +93,8 @@ MonoBehaviour:
   lockReticle: {fileID: 114376894520894488}
   marker: {fileID: 114828656384903496}
   label: {fileID: 114968999961927982}
+  minEdgeFromScreenH: 0.05
+  minEdgeFromScreenV: 0.1
 --- !u!114 &114376894520894488
 MonoBehaviour:
   m_ObjectHideFlags: 1

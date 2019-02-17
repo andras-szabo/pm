@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33353704492726178}
   - component: {fileID: 23744266906193872}
   - component: {fileID: 114820090270780454}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TurretBarrell
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 114842263582089574}
   - component: {fileID: 114369758147921126}
   - component: {fileID: 114777228333804828}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Turret
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -60,7 +60,7 @@ Transform:
   m_GameObject: {fileID: 1164712099575154}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -5.2, y: 11.01, z: 63.75}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children:
   - {fileID: 4403434392704276}
   m_Father: {fileID: 0}
@@ -202,6 +202,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitPoints: 100
+  destroyWhenHPzero: 1
 --- !u!114 &114720249116152850
 MonoBehaviour:
   m_ObjectHideFlags: 1

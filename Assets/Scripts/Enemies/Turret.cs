@@ -6,9 +6,6 @@ using UnityEngine;
 [RequireComponent(typeof(WeaponController))]
 public class Turret : MonoBehaviour 
 {
-	//TODO -- yeah get the player
-	public Rigidbody player;
-
 	float maxRange = 100f;
 
 	[Range(0.1f, 5f)] public float shotCooldownSeconds = 1f;
@@ -29,6 +26,9 @@ public class Turret : MonoBehaviour
 	private WeaponController _cachedWC;
 	private WeaponController CachedWeaponController { get { return _cachedWC ?? (_cachedWC = GetComponent<WeaponController>()); } }
 
+	private Rigidbody _player;
+	private Rigidbody CachedPlayer { get { return _player ?? (_player = GameController.TryGetManager<IPlayerManager>().Rigidbody); } }
+
 	private Rigidbody _cachedRigidBody;
 	private Rigidbody CachedRigidbody
 	{
@@ -47,7 +47,7 @@ public class Turret : MonoBehaviour
 	{
 		_elapsedSinceLastShot += Time.deltaTime;
 
-		if (_elapsedSinceLastShot >= shotCooldownSeconds && CanSee(player.position))
+		if (_elapsedSinceLastShot >= shotCooldownSeconds && CanSee(CachedPlayer.position))
 		{
 			if (TryCalculateAimPosition(out _aimPosition))
 			{
@@ -74,7 +74,7 @@ public class Turret : MonoBehaviour
 		if (Physics.Raycast(CachedRigidbody.position, targetPosition - CachedRigidbody.position,
 						out hit, maxRange))
 		{
-			return hit.rigidbody == player;
+			return hit.rigidbody == CachedPlayer;
 		}
 
 		return false;
@@ -92,14 +92,14 @@ public class Turret : MonoBehaviour
 
 	private bool TryCalculateAimPosition(out Vector3 aimPosition)
 	{
-		var p = player.position - CachedRigidbody.position;
-		var v = player.velocity - CachedRigidbody.velocity;
+		var p = CachedPlayer.position - CachedRigidbody.position;
+		var v = CachedPlayer.velocity - CachedRigidbody.velocity;
 		var s = bulletSpeedUnitsPerSecond;
 
 		float t;
 		if (TryCalculateTimeOfImpact(p, v, s, out t))
 		{
-			aimPosition = player.position + player.velocity * t;
+			aimPosition = CachedPlayer.position + CachedPlayer.velocity * t;
 			return true;
 		}
 

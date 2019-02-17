@@ -5,9 +5,9 @@ public class HoverThruster : MonoBehaviour
 {
 	public struct HoverInput
 	{
-		public readonly float vertical;
-		public readonly float horizontal;
-		public readonly bool jump;
+		public float vertical;
+		public float horizontal;
+		public bool jump;
 
 		public HoverInput(float vert, float hori, bool jmp)
 		{
@@ -24,18 +24,32 @@ public class HoverThruster : MonoBehaviour
 	[Range(1f, 150f)] public float correctiveForce;
 
 	public bool strafe;
+	public float zTolerance = 2f;
 
 	private Rigidbody _rb;
-	private Rigidbody CachedRigidbody { get { return _rb ?? (_rb = GetComponent<Rigidbody>()); } }
+	public Rigidbody CachedRigidbody { get { return _rb ?? (_rb = GetComponent<Rigidbody>()); } }
 
 	private Transform _transform;
 	private Transform CachedTransform {	get { return _transform ?? (_transform = this.transform); } }
 
 	private float _defaultForce;
-	private HoverInput _input;
 
 	private float _flipCorrectionSeconds = 0.5f;
 	private float _elapsedSinceFlipCorrectionStart = 0f;
+
+	private HoverInput _input;
+
+	public void SetInput(HoverInput inp)
+	{
+		_input = inp;
+	}
+
+	public void SetInput(float vert, float hori, bool jmp)
+	{
+		_input.vertical = vert;
+		_input.horizontal = hori;
+		_input.jump = jmp;
+	}
 
 	private void Awake()
 	{
@@ -47,13 +61,6 @@ public class HoverThruster : MonoBehaviour
 		ApplyHover(_input);
 		ApplyFlipCorrection();
 	}
-
-	private void Update()
-	{
-		ReadInput();
-	}
-
-	public float zTolerance = 2f;
 
 	private void ApplyFlipCorrection()
 	{
@@ -74,14 +81,7 @@ public class HoverThruster : MonoBehaviour
 		}
 	}
 
-	private void ReadInput()
-	{
-		_input = new HoverInput(vert: Input.GetAxis("Vertical"),
-								hori: Input.GetAxis("Horizontal"),
-								jmp: Input.GetKeyDown(KeyCode.Space));
-	}
-
-	public void ApplyHover(HoverInput hoverInput)
+	private void ApplyHover(HoverInput hoverInput)
 	{
 		var ray = new Ray(CachedTransform.position, -CachedTransform.up);
 		RaycastHit hit;

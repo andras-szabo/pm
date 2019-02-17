@@ -69,7 +69,7 @@ public class HUDMarker : MonoWithCachedTransform
 
 		UpdateLockOnVisuals(false);
 
-		_LOSlayermask = LayerMask.GetMask("Bullet"); 
+		_LOSlayermask = LayerMask.GetMask("EnemyBullet"); 
 		_LOSlayermask = ~_LOSlayermask;
 
 		_clampEdge = new Vector2(1f - minEdgeFromScreenH, 1f - minEdgeFromScreenV);

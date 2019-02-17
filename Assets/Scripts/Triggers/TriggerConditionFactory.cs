@@ -32,6 +32,24 @@ public class DistanceCondition : ITriggerCondition
 	private Transform _transform;
 	private float _distanceSquared;
 
+	private IPlayerManager _pm;
+	private IPlayerManager PM
+	{
+		get
+		{
+			return _pm ?? (_pm = GameController.TryGetManager<IPlayerManager>());
+		}
+	}
+
+	private Transform _playerTransform;
+	private Transform PlayerTransform
+	{
+		get
+		{
+			return _playerTransform ?? (_playerTransform = PM.Transform); 
+		}
+	}
+
 	public DistanceCondition(Transform ownTransform, int param)
 	{
 		_transform = ownTransform;
@@ -40,8 +58,8 @@ public class DistanceCondition : ITriggerCondition
 
 	public bool IsSatisfied()
 	{
-		var player = GameController.TryGetPlayerTransform();
-		return player != null && Vector3.SqrMagnitude(player.position - _transform.position) < _distanceSquared;
+
+		return PlayerTransform != null && Vector3.SqrMagnitude(PlayerTransform.position - _transform.position) < _distanceSquared;
 	}
 
 	public void OnDrawGizmos()

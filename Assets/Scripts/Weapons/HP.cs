@@ -5,6 +5,7 @@ using UnityEngine;
 public class HP : MonoBehaviour, ICollidable
 {
 	public int hitPoints = 100;
+	public bool destroyWhenHPzero;
 
 	public event System.Action<int> OnHitPointsChanged;
 
@@ -28,11 +29,14 @@ public class HP : MonoBehaviour, ICollidable
 
 	public void Hit(int damage)
 	{
-		hitPoints -= damage;
-		OnHitPointsChanged?.Invoke(hitPoints);
-		if (hitPoints <= 0)
+		if (hitPoints >= 0 && damage > 0)
 		{
-			Destroy(gameObject);
+			hitPoints -= damage;
+			OnHitPointsChanged?.Invoke(hitPoints);
+			if (hitPoints <= 0 && destroyWhenHPzero)
+			{
+				Destroy(gameObject);
+			}
 		}
 	}
 }
