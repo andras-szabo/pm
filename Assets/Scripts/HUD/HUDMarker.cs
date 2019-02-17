@@ -19,6 +19,12 @@ public class HUDMarker : MonoWithCachedTransform
 
 	public bool IsLockedOn { get; private set; }
 
+	[Range(0f, 0.2f)]
+	public float minEdgeFromScreenH = 0.05f;
+
+	[Range(0f, 0.2f)]
+	public float minEdgeFromScreenV = 0.05f;
+
 	private Transform _target;
 	private Camera _viewCamera;
 	private float _halfWidth;
@@ -31,6 +37,7 @@ public class HUDMarker : MonoWithCachedTransform
 	private bool _wasLocking;
 	private float _secondsRequiredForLockOn;
 	private bool _isLockable;
+	private Vector2 _clampEdge;
 
 	private Vector3 _lockOnReticleDefaultScale;
 	private Vector2 _lockTolerance;
@@ -64,6 +71,8 @@ public class HUDMarker : MonoWithCachedTransform
 
 		_LOSlayermask = LayerMask.GetMask("Bullet"); 
 		_LOSlayermask = ~_LOSlayermask;
+
+		_clampEdge = new Vector2(1f - minEdgeFromScreenH, 1f - minEdgeFromScreenV);
 
 		CachedTransform.SetAsFirstSibling();
 	}
@@ -170,8 +179,8 @@ public class HUDMarker : MonoWithCachedTransform
 		var clipSpaceCoords = proj * view * homogeneousTargetCoords;
 		_screenCoords = new Vector2(clipSpaceCoords.x, clipSpaceCoords.y) / clipSpaceCoords.w;
 
-		var clampedX = Mathf.Clamp(_screenCoords.x, -1f, 1f);
-		var clampedY = Mathf.Clamp(_screenCoords.y, -1f, 1f);
+		var clampedX = Mathf.Clamp(_screenCoords.x, -_clampEdge.x, _clampEdge.x);
+		var clampedY = Mathf.Clamp(_screenCoords.y, -_clampEdge.y, _clampEdge.y);
 
 		CachedTransform.localPosition = new Vector3(clampedX * _halfWidth, clampedY * _halfHeight);
 	}
@@ -180,11 +189,11 @@ public class HUDMarker : MonoWithCachedTransform
 	{
 		var isOnCamsRightSide = Vector3.Dot(_camTransform.right, camToTarget) > 0f ? 1f : -1f;
 		var screenPositionRatio = 1f + dotForwardVsTarget;
-		var posX = _halfWidth * isOnCamsRightSide * screenPositionRatio;
+		var posX = _halfWidth * isOnCamsRightSide * screenPositionRatio * _clampEdge.x;
 
 		_screenCoords = OUT_OF_SIGHT;
 
-		CachedTransform.localPosition = new Vector3(posX, -_halfHeight);
+		CachedTransform.localPosition = new Vector3(posX, -_halfHeight * _clampEdge.y);
 	}
 
 	private bool IsBehindCamera(Vector3 direction, out float dotProduct)
