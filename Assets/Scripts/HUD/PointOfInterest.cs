@@ -17,23 +17,33 @@ public class PointOfInterest : MonoWithCachedTransform
 {
 	public TriggerConditionType condition;
 	public int conditionParam;
+
+	public TriggerConditionType destroyCondition;
+	public int destroyConditionParam;
+
 	public Color color;
 	public string label;
 	public bool isLockable;
 
 	private bool _hasShownUpAsHUDMarker;
 	private ITriggerCondition _triggerCondition;
+	private ITriggerCondition _destroyCondition;
 
 	private void Awake()
 	{
-		GenerateTriggerCondition();
+		GenerateConditions();
 	}
 
 	private void Update()
 	{
-		if (!_hasShownUpAsHUDMarker && _triggerCondition.IsSatisfied())
+		if (!_hasShownUpAsHUDMarker && _triggerCondition != null && _triggerCondition.IsSatisfied())
 		{
 			ShowUpAsHUDMarker();
+		}
+
+		if (_hasShownUpAsHUDMarker && _destroyCondition != null && _destroyCondition.IsSatisfied())
+		{
+			Destroy(gameObject);
 		}
 	}
 
@@ -45,9 +55,10 @@ public class PointOfInterest : MonoWithCachedTransform
 		}
 	}
 
-	private void GenerateTriggerCondition()
+	private void GenerateConditions()
 	{
 		_triggerCondition = TriggerConditionFactory.Create(condition, CachedTransform, conditionParam);
+		_destroyCondition = TriggerConditionFactory.Create(destroyCondition, CachedTransform, destroyConditionParam);
 	}
 
 	private void ShowUpAsHUDMarker()

@@ -859,6 +859,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   condition: 2
   conditionParam: 80
+  destroyCondition: 0
+  destroyConditionParam: 0
   color: {r: 1, g: 0, b: 0.10067558, a: 0.39215687}
   label: Meanie
   isLockable: 1
@@ -970,7 +972,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 247.36, y: -46.83}
+  m_AnchoredPosition: {x: 247.36, y: -46.829956}
   m_SizeDelta: {x: 421.33, y: 28.76}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &295409933
@@ -1191,6 +1193,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   condition: 2
   conditionParam: 80
+  destroyCondition: 0
+  destroyConditionParam: 0
   color: {r: 1, g: 0, b: 0.10067558, a: 0.39215687}
   label: Meanie
   isLockable: 1
@@ -2714,6 +2718,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   condition: 1
   conditionParam: 0
+  destroyCondition: 0
+  destroyConditionParam: 0
   color: {r: 0.15848967, g: 0.7830189, b: 0.15143289, a: 0.76862746}
   label: Waypoint 2
   isLockable: 0
@@ -3472,6 +3478,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   condition: 1
   conditionParam: 0
+  destroyCondition: 2
+  destroyConditionParam: 10
   color: {r: 0.15848967, g: 0.7830189, b: 0.15143289, a: 0.76862746}
   label: Waypoint 1
   isLockable: 0
