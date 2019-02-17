@@ -14,17 +14,11 @@ public class CameraRotator : MonoBehaviour
 		get { return _cachedTransform ?? (_cachedTransform = this.transform); }
 	}
 
-	//TODO - swhere else?
-	private void Awake()
-	{
-		Cursor.lockState = CursorLockMode.Locked;
-	}
-
 	//TODO clamp at least pitch
-	private void LateUpdate()
+	public void ApplyInput(float inputV, float inputH)
 	{
-		var pitch = ignorePitch ? 0f : Input.GetAxis("Mouse Y") * (invertMouseVertical ? 1f : -1f);
-		var yaw = ignoreYaw ? 0f : Input.GetAxis("Mouse X");
+		var pitch = ignorePitch ? 0f : inputV * (invertMouseVertical ? 1f : -1f);
+		var yaw = ignoreYaw ? 0f : inputH;
 
 		var rotationSoFar = CachedTransform.rotation.eulerAngles;
 		var rotationDelta = new Vector3(pitch, yaw, 0f) * rotSensitivity * Time.deltaTime;

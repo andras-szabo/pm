@@ -2099,6 +2099,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 735f9a7529e003a4da0226c72206863e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  camRotators:
+  - {fileID: 1548567885}
+  - {fileID: 1711913176}
 --- !u!114 &1548567888
 MonoBehaviour:
   m_ObjectHideFlags: 0

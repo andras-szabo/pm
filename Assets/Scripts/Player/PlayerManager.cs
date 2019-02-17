@@ -9,6 +9,8 @@ public class PlayerManager : MonoWithCachedTransform, IPlayerManager
 	public const int MOUSE_BUTTON_WEAPON_TAG_0 = 0;
 	public const int MOUSE_BUTTON_WEAPON_TAG_1 = 1;
 
+	public CameraRotator[] camRotators;
+
 	private WeaponController _weaponController;
 	private HoverThruster _hoverThruster;
 
@@ -52,6 +54,22 @@ public class PlayerManager : MonoWithCachedTransform, IPlayerManager
 	{
 		ProcessMovementInput();
 		ProcessWeaponInput();
+	}
+
+	private void LateUpdate()
+	{
+		ProcessCameraRotationInput();
+	}
+
+	private void ProcessCameraRotationInput()
+	{
+		var v = Input.GetAxis("Mouse Y");
+		var h = Input.GetAxis("Mouse X");
+
+		foreach (var camRotator in camRotators)
+		{
+			camRotator.ApplyInput(v, h);
+		}
 	}
 
 	private void ProcessWeaponInput()

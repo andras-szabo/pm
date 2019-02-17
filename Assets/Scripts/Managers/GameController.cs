@@ -63,6 +63,8 @@ public class GameController : MonoBehaviour
 
 	private void InitInstance()
 	{
+		Cursor.lockState = CursorLockMode.Locked;
+
 		_instance = this;
 		_managers.Add(typeof(ICollisionManager), new CollisionManager());
 	}
