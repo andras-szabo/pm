@@ -1,9 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
 [RequireComponent(typeof(WeaponController))]
 [RequireComponent(typeof(HoverThruster))]
+[RequireComponent(typeof(HP))]
 public class PlayerManager : MonoWithCachedTransform, IPlayerManager
 {
 	public const int MOUSE_BUTTON_WEAPON_TAG_0 = 0;
@@ -11,19 +11,25 @@ public class PlayerManager : MonoWithCachedTransform, IPlayerManager
 
 	public CameraRotator[] camRotators;
 
-	private WeaponController _weaponController;
-	private HoverThruster _hoverThruster;
-
-	private Transform _lockedOnTarget;
-
+	public event Action<HPInfo> OnHealthChanged;
+	
 	public Rigidbody Rigidbody { get { return _hoverThruster.CachedRigidbody; } }
 	public Transform Transform { get { return CachedTransform; } }
+
+	private WeaponController _weaponController;
+	private HoverThruster _hoverThruster;
+	private HP _hp;
+
+	private Transform _lockedOnTarget;
 
 	private void Awake()
 	{
 		GameController.TryRegister<IPlayerManager>(this);
 		_weaponController = GetComponent<WeaponController>();
 		_hoverThruster = GetComponent<HoverThruster>();
+		_hp = GetComponent<HP>();
+
+		_hp.OnHitPointsChanged += HandleHPChanged;
 	}
 
 	private void Start()
@@ -45,9 +51,19 @@ public class PlayerManager : MonoWithCachedTransform, IPlayerManager
 		}
 	}
 
+	public HPInfo GetHPInfo()
+	{
+		return _hp.GetHPInfo();
+	}
+
 	private void HandleLockOnChanged(Transform newTarget)
 	{
 		_lockedOnTarget = newTarget;
+	}
+
+	private void HandleHPChanged(HPInfo hpInfo)
+	{
+		OnHealthChanged?.Invoke(hpInfo);
 	}
 
 	private void Update()

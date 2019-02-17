@@ -7,7 +7,19 @@ public class HP : MonoBehaviour, ICollidable
 	public int hitPoints = 100;
 	public bool destroyWhenHPzero;
 
-	public event System.Action<int> OnHitPointsChanged;
+	private int _startingHP;
+
+	public event System.Action<HPInfo> OnHitPointsChanged;
+
+	public HPInfo GetHPInfo()
+	{
+		return new HPInfo { current = hitPoints, max = _startingHP };
+	}
+
+	private void Awake()
+	{
+		_startingHP = hitPoints;
+	}
 
 	private void Start()
 	{
@@ -31,8 +43,8 @@ public class HP : MonoBehaviour, ICollidable
 	{
 		if (hitPoints >= 0 && damage > 0)
 		{
-			hitPoints -= damage;
-			OnHitPointsChanged?.Invoke(hitPoints);
+			hitPoints = System.Math.Max(0, hitPoints - damage);
+			OnHitPointsChanged?.Invoke(new HPInfo { current = hitPoints, max = _startingHP });
 			if (hitPoints <= 0 && destroyWhenHPzero)
 			{
 				Destroy(gameObject);

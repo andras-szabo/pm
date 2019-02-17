@@ -1,5 +1,12 @@
-﻿public interface IPlayerManager : IManager
+﻿using System;
+using UnityEngine;
+
+public interface IPlayerManager : IManager
 {
-	UnityEngine.Rigidbody Rigidbody { get; }
-	UnityEngine.Transform Transform { get; }
+	event Action<HPInfo> OnHealthChanged;
+
+	Rigidbody Rigidbody { get; }
+	Transform Transform { get; }
+
+	HPInfo GetHPInfo();
 }
