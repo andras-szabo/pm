@@ -9,7 +9,6 @@ public class DealDamageOnImpact : MonoBehaviour
 	{
 		if (_hasDealtDamage)
 		{
-			print("There are probably multiple colliders on this GameObject.");
 			return;
 		}
 

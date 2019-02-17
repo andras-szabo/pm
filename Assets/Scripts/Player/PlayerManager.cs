@@ -56,6 +56,11 @@ public class PlayerManager : MonoWithCachedTransform, IPlayerManager
 		return _hp.GetHPInfo();
 	}
 
+	public ProjectileLauncher GetLauncherWithTag(int weaponTag)
+	{
+		return _weaponController.GetLauncherWithTag(weaponTag);
+	}
+
 	private void HandleLockOnChanged(Transform newTarget)
 	{
 		_lockedOnTarget = newTarget;

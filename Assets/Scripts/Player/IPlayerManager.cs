@@ -9,4 +9,5 @@ public interface IPlayerManager : IManager
 	Transform Transform { get; }
 
 	HPInfo GetHPInfo();
+	ProjectileLauncher GetLauncherWithTag(int weaponTag);
 }

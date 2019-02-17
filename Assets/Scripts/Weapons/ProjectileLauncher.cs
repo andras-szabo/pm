@@ -13,7 +13,15 @@ public class ProjectileLauncher : MonoWithCachedTransform
 	[Range(0f, 5f)]
 	public float cooldownSeconds;
 
-	private float _elapsedSinceLastShot = 0f;
+	public float CooldownRate
+	{
+		get
+		{
+			return Mathf.Clamp01(_elapsedSinceLastShot / cooldownSeconds);
+		}
+	}
+
+	private float _elapsedSinceLastShot = 5f;
 
 	private void Update()
 	{

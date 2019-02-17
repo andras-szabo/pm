@@ -8,6 +8,16 @@ public class WeaponController : MonoBehaviour
 	private Dictionary<int, List<ProjectileLauncher>> _launchersByTag = new Dictionary<int, List<ProjectileLauncher>>();
 	private List<ProjectileLauncher> _workingList;
 
+	public ProjectileLauncher GetLauncherWithTag(int weaponTag)
+	{
+		if (_launchersByTag.TryGetValue(weaponTag, out _workingList))
+		{
+			return _workingList[0];
+		}
+
+		return null;
+	}
+
 	private void Awake()
 	{
 		foreach (var launcher in launchers)
