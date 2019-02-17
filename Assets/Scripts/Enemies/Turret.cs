@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(WeaponController))]
 public class Turret : MonoBehaviour 
 {
 	//TODO -- yeah get the player
 	public Rigidbody player;
-
-	//TODO -- pool
-	//TODO -- maybe we don't need rigidbodies for bullets?
-	public Rigidbody bullet;
 
 	float maxRange = 100f;
 
@@ -22,11 +19,15 @@ public class Turret : MonoBehaviour
 	[Tooltip("The higher this value, the lousier shot this turret.")] 
 	[Range(0.2f, 3f)] public float aimScatter;
 
+	//TODO: into bullet
 	public float bulletSpeedUnitsPerSecond = 100f;
 
 	private Vector3 _aimPosition;
 	private float _elapsedSinceLastShot;
 	private int _targetLayerMask;
+
+	private WeaponController _cachedWC;
+	private WeaponController CachedWeaponController { get { return _cachedWC ?? (_cachedWC = GetComponent<WeaponController>()); } }
 
 	private Rigidbody _cachedRigidBody;
 	private Rigidbody CachedRigidbody
@@ -56,13 +57,8 @@ public class Turret : MonoBehaviour
 				_aimPosition += (1f - aimPrecision) * new Vector3(scatterX, scatterY);
 
 				CachedRigidbody.transform.LookAt(_aimPosition, Vector3.up);
+				CachedWeaponController.Shoot(0, null);
 
-				var bulletInstance = Instantiate<Rigidbody>(bullet,
-														CachedRigidbody.position,
-														CachedRigidbody.rotation,
-														null);
-
-				bulletInstance.velocity = CachedRigidbody.transform.forward * bulletSpeedUnitsPerSecond;
 				_elapsedSinceLastShot = 0f;
 				return true;
 			}
@@ -86,9 +82,12 @@ public class Turret : MonoBehaviour
 
 	private void OnDrawGizmos()
 	{
-		Gizmos.color = Color.blue;
-		Gizmos.DrawSphere(_aimPosition, 0.2f);
-		Gizmos.DrawLine(CachedRigidbody.position, _aimPosition);
+		if (Application.isPlaying)
+		{
+			Gizmos.color = Color.blue;
+			Gizmos.DrawSphere(_aimPosition, 0.2f);
+			Gizmos.DrawLine(CachedRigidbody.position, _aimPosition);
+		}
 	}
 
 	private bool TryCalculateAimPosition(out Vector3 aimPosition)

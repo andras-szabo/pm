@@ -63,7 +63,7 @@ GameObject:
   - component: {fileID: 54401158974709996}
   - component: {fileID: 114689485178821202}
   m_Layer: 9
-  m_Name: RocketPrototype
+  m_Name: PlayerRocket
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -78,6 +78,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4017310560267042}
   - component: {fileID: 20519089018276928}
+  - component: {fileID: 114571583734950316}
   m_Layer: 9
   m_Name: Camera
   m_TagString: Untagged
@@ -92,7 +93,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1956385283166086}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.86}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 4463426605232062}
@@ -132,7 +133,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1552495224256734}
   m_LocalRotation: {x: -0.36243322, y: -0, z: -0, w: 0.93200976}
-  m_LocalPosition: {x: 0, y: 134, z: 274}
+  m_LocalPosition: {x: 885.64343, y: 547.60535, z: 418.37186}
   m_LocalScale: {x: 0.31982, y: 0.36725, z: 2.9191}
   m_Children:
   - {fileID: 4463426605232062}
@@ -475,6 +476,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxRotationAnglesPerSec: 60
   speedPerSecond: 32
+--- !u!114 &114571583734950316
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1956385283166086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3073e12a5ea84b6498afb44cc171e22a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  customCamera: {fileID: 20519089018276928}
+  type: 1
 --- !u!114 &114689485178821202
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -1,11 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Projectile : MonoWithCachedTransform, IProjectile
 {
+	[Range(1f, 100f)]
+	public float speedPerSecond;
+
 	public virtual void Setup(Transform transform)
 	{
+	}
+
+	protected virtual void Update()
+	{
+		CachedTransform.position += CachedTransform.forward * speedPerSecond * Time.deltaTime;
 	}
 }
 

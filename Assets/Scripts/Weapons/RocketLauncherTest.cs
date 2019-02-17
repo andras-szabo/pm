@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RocketLauncherTest : MonoWithCachedTransform
 {
-	public ProjectileLauncher launcher;
+	public WeaponController weapons;
 
 	private void Update()
 	{
@@ -14,8 +14,13 @@ public class RocketLauncherTest : MonoWithCachedTransform
 
 			if (target != null)
 			{
-				launcher.Launch(CachedTransform.rotation, target);
+				weapons.Shoot(1, target);
 			}
+		}
+
+		if (Input.GetMouseButton(0))
+		{
+			weapons.Shoot(0, null);
 		}
 	}
 }

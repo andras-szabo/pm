@@ -11,8 +11,9 @@ public class HUDManager : MonoWithCachedTransform, IHUDManager
 	public HUDMarker markerPrefab;
 	public Camera viewCamera;
 
-	private Vector2 _screenHalfDimensions;
+	public HUDCustomCameraScreen[] customCameraScreens;
 
+	private Vector2 _screenHalfDimensions;
 	private LockOnManager _lockOnManager;
 	public ILockOnManager LockOnManager
 	{
@@ -50,5 +51,23 @@ public class HUDManager : MonoWithCachedTransform, IHUDManager
 		var halfHeight = Screen.height / 2f / resolutionFactor;
 
 		_screenHalfDimensions = new Vector2(halfWidth, halfHeight);
+	}
+
+	public Rect GetPixelRectForCamViewport(CustomCameraType type)
+	{
+		foreach (var camScreen in customCameraScreens)
+		{
+			if (camScreen.type == type)
+			{
+				return CalculateCamRect(camScreen.GetWorldCorners());
+			}
+		}
+
+		return new Rect(0, 0, 0, 0);
+	}
+
+	private Rect CalculateCamRect(Vector3[] worldCorners)
+	{
+		return new Rect(worldCorners[0], worldCorners[2] - worldCorners[0]);
 	}
 }

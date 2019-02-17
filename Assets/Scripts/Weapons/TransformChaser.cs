@@ -12,10 +12,7 @@ public class TransformChaser : Projectile
 	[Range(30f, 180f)]
 	public float maxRotationAnglesPerSec;
 
-	[Range(1f, 100f)]
-	public float speedPerSecond;
-
-	private void Update()
+	protected override void Update()
 	{
 		if (_target != null)
 		{
@@ -28,7 +25,7 @@ public class TransformChaser : Projectile
 			}
 		}
 
-		CachedTransform.position += CachedTransform.forward * speedPerSecond * Time.deltaTime;
+		base.Update();
 	}
 
 	private void RotateTowards(Vector3 toTarget, float angleDifference)
