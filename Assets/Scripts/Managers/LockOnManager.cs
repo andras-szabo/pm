@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class LockOnManager : MonoBehaviour, ILockOnManager
@@ -13,9 +14,10 @@ public class LockOnManager : MonoBehaviour, ILockOnManager
 			OnLockOnChanged?.Invoke(_lockedOnHudMarker != null ? _lockedOnHudMarker.Target : null);
 		}
 	}
-	public bool IsLockedOn { get { return _lockedOnHudMarker != null; } } 
+	public bool IsLockedOn { get { return _lockedOnHudMarker != null; } }
 
-	public event System.Action<Transform> OnLockOnChanged;
+	public event Action<Transform> OnLockOnChanged;
+	public event Action<LineOfSightInfo> OnTargetInSightChanged;
 
 	[Range(0.1f, 1f)]
 	public float lockOnToleranceH;
@@ -55,35 +57,47 @@ public class LockOnManager : MonoBehaviour, ILockOnManager
 		}
 	}
 
-	public void UpdateLockStatus(HUDMarker marker, bool isTargetInLockedArea, float distanceToCentreSquared)
-	{
-		if (!IsLockedOn || _dropLockOn)
-		{
-			if (distanceToCentreSquared < _shortestDistanceToScreenCentreSquared)
-			{
-				if (_markerClosestToScreenCentre != null)
-				{
-					_inactiveMarkers.Add(_markerClosestToScreenCentre);
-				}
+	bool _hasLineOfSight;
 
-				_markerClosestToScreenCentre = marker;
-				_shortestDistanceToScreenCentreSquared = distanceToCentreSquared;
-				_isTargetInLockArea = isTargetInLockedArea;
-			}
-			else
+	public void UpdateLockStatus(HUDMarker marker, bool isTargetInLockedArea, float distanceToCentreSquared, bool hasLineOfSight)
+	{
+		if (distanceToCentreSquared < _shortestDistanceToScreenCentreSquared)
+		{
+			if (_markerClosestToScreenCentre != null)
 			{
-				_inactiveMarkers.Add(marker);
+				_inactiveMarkers.Add(_markerClosestToScreenCentre);
 			}
+
+			_markerClosestToScreenCentre = marker;
+			_shortestDistanceToScreenCentreSquared = distanceToCentreSquared;
+			_isTargetInLockArea = isTargetInLockedArea;
+			_hasLineOfSight = hasLineOfSight;
 		}
+		else
+		{
+			_inactiveMarkers.Add(marker);
+		}
+	}
+
+	private void UpdateLineOfSight(bool hasLOS, HUDMarker marker)
+	{
+		var isEnemy = hasLOS && marker != null && marker.IsEnemy;
+		OnTargetInSightChanged(new LineOfSightInfo
+		{
+			isEnemyInSight = isEnemy,
+			isLockedOn = IsLockedOn
+		});
 	}
 
 	private void LateUpdate()
 	{
+		UpdateLineOfSight(_hasLineOfSight, _markerClosestToScreenCentre);
+
 		if (!IsLockedOn || _dropLockOn)
 		{
 			foreach (var marker in _inactiveMarkers)
 			{
-				marker.DisengageLockOn();
+				if (marker != null) { marker.DisengageLockOn(); }
 			}
 
 			if (_markerClosestToScreenCentre != null)
@@ -101,11 +115,13 @@ public class LockOnManager : MonoBehaviour, ILockOnManager
 					}
 				}
 			}
-
-			_markerClosestToScreenCentre = null;
-			_inactiveMarkers.Clear();
-			_shortestDistanceToScreenCentreSquared = 10f;
-			_dropLockOn = false;
 		}
+
+		_markerClosestToScreenCentre = null;
+		_inactiveMarkers.Clear();
+		_shortestDistanceToScreenCentreSquared = 10f;
+		_dropLockOn = false;
+
+		_hasLineOfSight = false;
 	}
 }

@@ -9,6 +9,8 @@ public class HUDMarker : MonoWithCachedTransform
 	public Image marker;
 	public Text label;
 
+	public bool IsEnemy { get { return _isLockable; } }
+
 	public Transform Target
 	{
 		get
@@ -112,8 +114,9 @@ public class HUDMarker : MonoWithCachedTransform
 		if (_lockOnManager != null)
 		{
 			float distanceToCentreSquared;
-			var isTargetInLockedArea = IsTargetInLockArea(out distanceToCentreSquared);
-			_lockOnManager.UpdateLockStatus(this, isTargetInLockedArea, distanceToCentreSquared);
+			bool hasLineOfSight;
+			var isTargetInLockedArea = IsTargetInLockArea(out distanceToCentreSquared, out hasLineOfSight);
+			_lockOnManager.UpdateLockStatus(this, isTargetInLockedArea, distanceToCentreSquared, hasLineOfSight);
 		}
 	}
 
@@ -148,14 +151,16 @@ public class HUDMarker : MonoWithCachedTransform
 		lockReticle.fillAmount = lockOnRatio;
 	}
 
-	private bool IsTargetInLockArea(out float distanceToScreenCentreSquared)
+	private bool IsTargetInLockArea(out float distanceToScreenCentreSquared, out bool hasLineOfSight)
 	{
 		distanceToScreenCentreSquared = _screenCoords.sqrMagnitude;
 
-		var isinLockArea = Mathf.Abs(_screenCoords.x) < _lockTolerance.x &&
+		var isInLockArea = Mathf.Abs(_screenCoords.x) < _lockTolerance.x &&
 						   Mathf.Abs(_screenCoords.y) < _lockTolerance.y;
 
-		return isinLockArea && HasLineOfSight();
+		hasLineOfSight = isInLockArea && HasLineOfSight();
+
+		return isInLockArea && hasLineOfSight;
 	}
 
 	private bool HasLineOfSight()
