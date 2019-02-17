@@ -1964,7 +1964,6 @@ GameObject:
   - component: {fileID: 1548567885}
   - component: {fileID: 1548567888}
   - component: {fileID: 1548567889}
-  - component: {fileID: 1548567890}
   - component: {fileID: 1548567887}
   m_Layer: 9
   m_Name: Hovercraft
@@ -2128,18 +2127,6 @@ MonoBehaviour:
   - {fileID: 283433388}
   - {fileID: 1182409991}
   - {fileID: 1647552029}
---- !u!114 &1548567890
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1548567879}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 526307f85d46a0b47979e695738ff8c0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weapons: {fileID: 1548567889}
 --- !u!1001 &1609031924
 Prefab:
   m_ObjectHideFlags: 0

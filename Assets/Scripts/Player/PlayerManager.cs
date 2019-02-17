@@ -6,10 +6,13 @@ using UnityEngine;
 [RequireComponent(typeof(HoverThruster))]
 public class PlayerManager : MonoWithCachedTransform, IPlayerManager
 {
+	public const int MOUSE_BUTTON_WEAPON_TAG_0 = 0;
+	public const int MOUSE_BUTTON_WEAPON_TAG_1 = 1;
+
 	private WeaponController _weaponController;
 	private HoverThruster _hoverThruster;
 
-	private HoverThruster.HoverInput _hoverInput;
+	private Transform _lockedOnTarget;
 
 	public Rigidbody Rigidbody { get { return _hoverThruster.CachedRigidbody; } }
 	public Transform Transform { get { return CachedTransform; } }
@@ -21,6 +24,30 @@ public class PlayerManager : MonoWithCachedTransform, IPlayerManager
 		_hoverThruster = GetComponent<HoverThruster>();
 	}
 
+	private void Start()
+	{
+		var lockOnManager = GameController.TryGetManager<IHUDManager>().LockOnManager;
+		lockOnManager.OnLockOnChanged += HandleLockOnChanged;
+	}
+
+	private void OnDestroy()
+	{
+		var hud = GameController.TryGetManager<IHUDManager>();
+		if (hud != null)
+		{
+			var lockOnManager = hud.LockOnManager;
+			if (lockOnManager != null)
+			{
+				lockOnManager.OnLockOnChanged -= HandleLockOnChanged;
+			}
+		}
+	}
+
+	private void HandleLockOnChanged(Transform newTarget)
+	{
+		_lockedOnTarget = newTarget;
+	}
+
 	private void Update()
 	{
 		ProcessMovementInput();
@@ -29,17 +56,15 @@ public class PlayerManager : MonoWithCachedTransform, IPlayerManager
 
 	private void ProcessWeaponInput()
 	{
-		if (Input.GetMouseButtonDown(1))
+		if (Input.GetMouseButtonDown(MOUSE_BUTTON_WEAPON_TAG_1))
 		{
-			var target = GameController.TryGetManager<IHUDManager>().LockOnManager.LockedOnTransform;
-
-			if (target != null)
+			if (_lockedOnTarget != null)
 			{
-				_weaponController.Shoot(1, target);
+				_weaponController.Shoot(1, _lockedOnTarget);
 			}
 		}
 
-		if (Input.GetMouseButton(0))
+		if (Input.GetMouseButton(MOUSE_BUTTON_WEAPON_TAG_0))
 		{
 			_weaponController.Shoot(0, null);
 		}

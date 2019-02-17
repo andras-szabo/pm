@@ -4,8 +4,18 @@ using UnityEngine;
 public class LockOnManager : MonoBehaviour, ILockOnManager
 {
 	private HUDMarker _lockedOnHudMarker;
+	public HUDMarker LockedOnHUDMarker
+	{
+		get { return _lockedOnHudMarker; }
+		set
+		{
+			_lockedOnHudMarker = value;
+			OnLockOnChanged?.Invoke(_lockedOnHudMarker != null ? _lockedOnHudMarker.Target : null);
+		}
+	}
 	public bool IsLockedOn { get { return _lockedOnHudMarker != null; } } 
-	public Transform LockedOnTransform { get { return _lockedOnHudMarker != null ? _lockedOnHudMarker.Target : null; } }
+
+	public event System.Action<Transform> OnLockOnChanged;
 
 	[Range(0.1f, 1f)]
 	public float lockOnToleranceH;
@@ -41,7 +51,7 @@ public class LockOnManager : MonoBehaviour, ILockOnManager
 	{
 		if (_lockedOnHudMarker == marker)
 		{
-			_lockedOnHudMarker = null;
+			LockedOnHUDMarker = null;
 		}
 	}
 
@@ -81,13 +91,13 @@ public class LockOnManager : MonoBehaviour, ILockOnManager
 				if (_dropLockOn)
 				{
 					_markerClosestToScreenCentre.DisengageLockOn();
-					_lockedOnHudMarker = null;
+					LockedOnHUDMarker = null;
 				}
 				else
 				{
 					if (_markerClosestToScreenCentre.EngageLockOnAndCheckIfLockedOn(_isTargetInLockArea))
 					{
-						_lockedOnHudMarker = _markerClosestToScreenCentre;
+						LockedOnHUDMarker = _markerClosestToScreenCentre;
 					}
 				}
 			}
