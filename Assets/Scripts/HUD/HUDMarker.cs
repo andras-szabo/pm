@@ -60,10 +60,7 @@ public class HUDMarker : MonoWithCachedTransform
 		this.label.text = label;
 		this.label.color = color;
 
-		if (!_isLockable)
-		{
-			UpdateLockOnVisuals(false);
-		}
+		UpdateLockOnVisuals(false);
 
 		_LOSlayermask = LayerMask.GetMask("Bullet"); 
 		_LOSlayermask = ~_LOSlayermask;

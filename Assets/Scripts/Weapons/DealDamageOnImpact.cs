@@ -5,7 +5,7 @@ public class DealDamageOnImpact : MonoBehaviour
 	public int damage;
 	private bool _hasDealtDamage;
 
-	private void OnCollisionEnter(Collision collision)
+	private void OnTriggerEnter(Collider collider)
 	{
 		if (_hasDealtDamage)
 		{
@@ -16,7 +16,7 @@ public class DealDamageOnImpact : MonoBehaviour
 		var collisionManager = GameController.TryGetManager<ICollisionManager>();
 		if (collisionManager != null)
 		{
-			collisionManager.ReportHit(collision.gameObject, damage);
+			collisionManager.ReportHit(collider.gameObject, damage);
 		}
 
 		_hasDealtDamage = true;
