@@ -10,14 +10,9 @@ public class HUDMarker : MonoWithCachedTransform
 	public Text label;
 
 	public bool IsEnemy { get { return _isLockable; } }
-
-	public Transform Target
-	{
-		get
-		{
-			return IsLockedOn ? _target : null;
-		}
-	}
+	public Transform Target { get { return _target; } }
+	public Transform LockedOnTarget { get { return IsLockedOn ? _target : null; } }
+	public Color Color { get { return marker.color; } }
 
 	public bool IsLockedOn { get; private set; }
 

@@ -11,7 +11,7 @@ public class LockOnManager : MonoBehaviour, ILockOnManager
 		set
 		{
 			_lockedOnHudMarker = value;
-			OnLockOnChanged?.Invoke(_lockedOnHudMarker != null ? _lockedOnHudMarker.Target : null);
+			OnLockOnChanged?.Invoke(_lockedOnHudMarker != null ? _lockedOnHudMarker.LockedOnTarget : null);
 		}
 	}
 	public bool IsLockedOn { get { return _lockedOnHudMarker != null; } }

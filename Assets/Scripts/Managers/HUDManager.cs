@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(LockOnManager))]
@@ -9,6 +7,7 @@ public class HUDManager : MonoWithCachedTransform, IHUDManager
 {
 	public HUDMarker markerPrefab;
 	public Camera viewCamera;
+	public Compass compass;
 
 	public HUDCustomCameraScreen[] customCameraScreens;
 
@@ -29,6 +28,7 @@ public class HUDManager : MonoWithCachedTransform, IHUDManager
 	{
 		var newMarker = Instantiate<HUDMarker>(markerPrefab, CachedTransform);
 		newMarker.Setup(viewCamera, target, _screenHalfDimensions, color, label, isLockable, this);
+		compass.AddCustomHUDMarker(newMarker);
 	}
 
 	public void RemoveMarker(HUDMarker marker)

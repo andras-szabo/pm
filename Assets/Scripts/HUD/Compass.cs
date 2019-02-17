@@ -1,8 +1,8 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 [RequireComponent(typeof(RectTransform))]
-public class Compass : MonoBehaviour 
+public class Compass : MonoBehaviour
 {
 	[Tooltip("Probably a camera whose orientation you'd like to track.")]
 	public Transform targetTransform;
@@ -13,11 +13,15 @@ public class Compass : MonoBehaviour
 	[Range(45f, 359f)] public float FOV = 60f;
 	[Range(0f, 1f)] public float curvature = 1f;
 
+	public CustomCompassMarker customMarkerPrefab;
+
 	private Vector2 north = new Vector2(0f, 1f);
 
 	private RectTransform _cachedRectTransform;
 	private RectTransform CachedRectTransform { get { return _cachedRectTransform ?? (_cachedRectTransform = GetComponent<RectTransform>()); } }
 	private Vector3[] _tempCornersArray = new Vector3[4];
+
+	private List<CustomCompassMarker> _customMarkers = new List<CustomCompassMarker>();
 
 	private Vector3 _topLeftCorner;
 	private Vector3 _bottomRightCorner;
@@ -34,7 +38,9 @@ public class Compass : MonoBehaviour
 
 	private void Update()
 	{
-		var needsToRefresh = false;
+		// If we have at least one custom marker, we need to refresh -
+		// who knows where they moved between frames.
+		var needsToRefresh = _customMarkers.Count > 0;
 
 		if (CachedRectTransform.hasChanged || _previousCurvature != curvature)
 		{
@@ -46,7 +52,7 @@ public class Compass : MonoBehaviour
 
 		needsToRefresh |= (_previousFOV != FOV);
 
-		if (!needsToRefresh && 
+		if (!needsToRefresh &&
 			Mathf.Approximately(lookDirection.x, _previousLookDirection.x) &&
 			Mathf.Approximately(lookDirection.y, _previousLookDirection.y))
 		{
@@ -69,10 +75,56 @@ public class Compass : MonoBehaviour
 		if (fovLeft < 0f) { fovLeft = 360f + fovLeft; }
 		if (fovRight < fovLeft) { fovRight += 360f; }
 
+		UpdateCardinalDirectionMarkers(fovLeft, fovRight);
+		UpdateCustomMarkers(lookDirection);
+	}
+
+	private void UpdateCustomMarkers(Vector2 lookDirection)
+	{
+		var shouldCleanup = false;
+		foreach (var marker in _customMarkers)
+		{
+			if (marker.HUDMarker != null && marker.HUDMarker.Target != null)
+			{
+				var toTarget = marker.HUDMarker.Target.position - targetTransform.position;
+				var angle = Vector2.SignedAngle(lookDirection, new Vector2(toTarget.x, toTarget.z));
+
+				var markerRelativeHalfPosition = angle / (FOV / 2);
+				var markerRelativePosition = Mathf.Clamp01(0.5f - markerRelativeHalfPosition);
+
+				var x = _topLeftCorner.x + markerRelativePosition * _compassDimensions.x;
+				var y = _markerVerticalOffset - (_compassDimensions.y * curvature * Mathf.Sin(markerRelativePosition * Mathf.PI));
+
+				marker.transform.position = new Vector3(x, y);
+			}
+			else
+			{
+				Destroy(marker.gameObject);
+				shouldCleanup = true;
+			}
+		}
+
+		if (shouldCleanup)
+		{
+			_customMarkers.RemoveAll(marker => marker == null || 
+								     marker.HUDMarker == null || 
+									 marker.HUDMarker.Target == null);
+		}
+	}
+
+	public void AddCustomHUDMarker(HUDMarker marker)
+	{
+		var newMarker = Instantiate<CustomCompassMarker>(customMarkerPrefab, parent: this.transform);
+		newMarker.Setup(marker);
+		_customMarkers.Add(newMarker);
+	}
+
+	private void UpdateCardinalDirectionMarkers(float fovLeftAngle, float fovRightAngle)
+	{
 		for (int i = 0; i < markers.Length; ++i)
 		{
 			var direction = i * (360f / markers.Length);
-			if (Mathf.Abs(fovRight - direction) > 360f) 
+			if (Mathf.Abs(fovRightAngle - direction) > 360f)
 			{
 				direction += 360f;
 			}
@@ -81,10 +133,10 @@ public class Compass : MonoBehaviour
 			// the angles marked by field-of-view-left and field-of-view-right,
 			// then it's actually visible on the compass.
 
-			if (fovLeft < direction && direction < fovRight)
+			if (fovLeftAngle < direction && direction < fovRightAngle)
 			{
 				markers[i].gameObject.SetActive(true);
-				var markerRelativePosition = (direction - fovLeft) / FOV;
+				var markerRelativePosition = (direction - fovLeftAngle) / FOV;
 
 				var x = _topLeftCorner.x + markerRelativePosition * _compassDimensions.x;
 				var y = _markerVerticalOffset - (_compassDimensions.y * curvature * Mathf.Sin(markerRelativePosition * Mathf.PI));
