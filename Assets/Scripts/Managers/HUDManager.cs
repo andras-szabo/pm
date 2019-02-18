@@ -38,6 +38,9 @@ public class HUDManager : MonoWithCachedTransform, IHUDManager
 
 	private void RecalculateScreenDimensions()
 	{
+		// This is assuming "scale with screen size" UI scale mode.
+		// Details: https://docs.unity3d.com/ScriptReference/UI.CanvasScaler-matchWidthOrHeight.html
+
 		var canvasScaler = GetComponent<CanvasScaler>();
 
 		var logWidth = Mathf.Log10((float)Screen.width / canvasScaler.referenceResolution.x);
